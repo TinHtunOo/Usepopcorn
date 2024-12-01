@@ -50,11 +50,32 @@ body {
 }
 
 .box {
-  width: 42rem;
-  max-width: 42rem;
+  width: 45rem;
+  max-width: 45rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   position: relative;
+  overflow-y: auto;
+}
+/* width */
+.box::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  overflow: hidden;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .loader {

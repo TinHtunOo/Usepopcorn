@@ -3,30 +3,36 @@ import PropTypes from "prop-types";
 
 const starContainer = {
   display: "flex",
+  alignItems: "center",
 };
 
 const starBox = {
   display: "flex",
-  //   alignItems: "center",
+  alignItems: "center",
   gap: 20,
 };
 
 RisingStar.propTypes = {
+  defaultRating: PropTypes.number,
   maxRating: PropTypes.number,
   color: PropTypes.string,
   size: PropTypes.number,
+  onSetRating: PropTypes.func,
 };
 
 export default function RisingStar({
+  defaultRating = 0,
   maxRating = 5,
   color = "#fcc419",
   size = 48,
+  onSetRating,
 }) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(defaultRating);
   const [temRate, setTempRate] = useState(0);
-  const textStyle = { color, fontSize: `${size / 3}px` };
+  const textStyle = { color, fontSize: `${size / 1.7}px` };
   function handleRate(i) {
     setRating(i + 1);
+    onSetRating(i + 1);
   }
   function handleMouseOver(i) {
     setTempRate(i + 1);
