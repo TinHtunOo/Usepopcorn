@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import RisingStar from "./RisingStar";
 import { useGetMovie } from "./useGetMovies";
+import { useStorageSpace } from "./useStorageSpace";
+import { useKey } from "./useKey";
 
 // const tempMovieData = [
 //   {
@@ -57,10 +59,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
 
-  const [watched, setWatched] = useState(function () {
-    const watchedMovieList = localStorage.getItem("watched");
-    return JSON.parse(watchedMovieList);
-  });
+  const { watched, setWatched } = useStorageSpace([], "watched");
 
   const starRate = watched?.some((movie) => movie.imdbID === selected)
     ? watched.filter((movie) => movie.imdbID === selected).at(0).userRating
@@ -153,25 +152,11 @@ function Logo() {
 
 function SearchBar({ query, setQuery }) {
   const inputEl = useRef(null);
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Enter") {
-          // console.log(document.activeElement);
-          // console.log(inputEl.current);
-          if (document.activeElement === inputEl.current) return;
-          inputEl.current.focus();
-          setQuery("");
-        }
-      }
-
-      document.addEventListener("keydown", callBack);
-      return () => {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [setQuery]
-  );
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
   return (
     <input
       className="search"
@@ -293,20 +278,7 @@ function MovieDetail({ selected, onCloseMovie, onAddWatchedMovie, starRate }) {
     [selected]
   );
 
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
-      document.addEventListener("keydown", callBack);
-      return function () {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [onCloseMovie]
-  );
+  useKey("Escape", onCloseMovie);
 
   useEffect(
     function () {
